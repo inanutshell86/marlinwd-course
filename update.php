@@ -1,4 +1,7 @@
 <?php
+require 'database/QueryBuilder.php';
+
+$db = new QueryBuilder();
 
 $data = [
     "id" => $_GET['id'],
@@ -6,9 +9,6 @@ $data = [
     "content" => $_POST['content']
 ];
 
-$pdo = new PDO("mysql:host=localhost; dbname=marlin", "root", "");
-$sql = "UPDATE notes SET title = :title, content = :content WHERE id = :id";
-$stmt = $pdo->prepare($sql);
-$stmt->execute($data);
+$db->updateNote($data);
 
 header("Location: /"); exit;

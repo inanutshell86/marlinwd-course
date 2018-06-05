@@ -1,9 +1,8 @@
 <?php
-$pdo = new PDO("mysql:host=localhost; dbname=marlin", "root", "");
-$sql = "SELECT * FROM notes";
-$stmt = $pdo->prepare($sql);
-$result = $stmt->execute();
-$notes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+require 'database/QueryBuilder.php';
+
+$db = new QueryBuilder();
+$notes = $db->getAllNotes();
 ?>
 <!doctype html>
 <html lang="en">

@@ -1,8 +1,8 @@
 <?php
-$pdo = new PDO("mysql:host=localhost; dbname=marlin", "root", "");
-$sql = "DELETE FROM notes WHERE id = :id";
-$stmt = $pdo->prepare($sql);
-$stmt->bindParam(":id", $_GET['id']);
-$stmt->execute();
+require 'database/QueryBuilder.php';
+
+$db = new QueryBuilder();
+
+$db->deleteNote($_GET['id']);
 
 header("Location: /");

@@ -1,10 +1,8 @@
 <?php
-$pdo = new PDO("mysql:host=localhost; dbname=marlin", "root", "");
-$sql = "SELECT * FROM notes WHERE id = :id";
-$stmt = $pdo->prepare($sql);
-$stmt->bindParam(":id", $_GET['id']);
-$stmt->execute();
-$note = $stmt->fetch(PDO::FETCH_ASSOC);
+require 'database/QueryBuilder.php';
+
+$db = new QueryBuilder();
+$note = $db->getNote($_GET['id']);
 ?>
 
 <!doctype html>
