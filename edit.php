@@ -2,7 +2,7 @@
 require 'database/QueryBuilder.php';
 
 $db = new QueryBuilder();
-$note = $db->getNote($_GET['id']);
+$note = $db->getById("notes", $_GET['id']);
 ?>
 
 <!doctype html>

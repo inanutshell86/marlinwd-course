@@ -2,7 +2,7 @@
 require 'database/QueryBuilder.php';
 
 $db = new QueryBuilder();
-$notes = $db->getAllNotes();
+$notes = $db->getAll("notes");
 ?>
 <!doctype html>
 <html lang="en">

@@ -2,5 +2,5 @@
 require 'database/QueryBuilder.php';
 
 $db = new QueryBuilder();
-$db->addNote($_POST);
+$db->store("notes", $_POST);
 header("Location: /"); exit;

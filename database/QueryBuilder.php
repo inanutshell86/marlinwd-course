@@ -1,48 +1,58 @@
 <?php
 class QueryBuilder
 {
-    function getAllNotes()
+    public $pdo;
+
+    function __construct()
     {
-        $pdo = new PDO("mysql:host=localhost; dbname=marlin", "root", "");
-        $sql = "SELECT * FROM notes";
-        $stmt = $pdo->prepare($sql);
-        $result = $stmt->execute();
-        $notes = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        return $notes;
+        $this->pdo = new PDO("mysql:host=localhost; dbname=marlin", "root", "");
     }
 
-    function getNote($id)
+    function getAll($table)
     {
-        $pdo = new PDO("mysql:host=localhost; dbname=marlin", "root", "");
-        $sql = "SELECT * FROM notes WHERE id = :id";
-        $stmt = $pdo->prepare($sql);
+        $sql = "SELECT * FROM $table";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
+    }
+
+    function getById($table, $id)
+    {
+        $sql = "SELECT * FROM $table WHERE id = :id";
+        $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(":id", $id);
         $stmt->execute();
-        $note = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $note;
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result;
     }
 
-    function addNote($data)
+    function store($table, $data)
     {
-        $sql = "INSERT INTO notes (title, content) VALUES (:title, :content)";
-        $pdo = new PDO("mysql:host=localhost; dbname=marlin", "root", "");
-        $stmt = $pdo->prepare($sql);
+        $keys = array_keys($data);
+        $strKeys = implode(",", $keys);
+        $placeholders = ":" . implode(", :", $keys);
+        $sql = "INSERT INTO $table ($strKeys) VALUES ($placeholders)";
+        $stmt = $this->pdo->prepare($sql);
         $stmt->execute($data);
     }
 
-    function updateNote($data)
+    function update($table, $data)
     {
-        $pdo = new PDO("mysql:host=localhost; dbname=marlin", "root", "");
-        $sql = "UPDATE notes SET title = :title, content = :content WHERE id = :id";
-        $stmt = $pdo->prepare($sql);
+        $fields = "";
+        foreach ($data as $key => $value) {
+            $fields .= $key . "=:" . $key . ",";
+        }
+        $placeholders = rtrim($fields, ",");
+        $sql = "UPDATE $table SET $placeholders WHERE id = :id";
+        $stmt = $this->pdo->prepare($sql);
         $stmt->execute($data);
     }
 
-    function deleteNote($id)
+    function deleteById($table, $id)
     {
-        $pdo = new PDO("mysql:host=localhost; dbname=marlin", "root", "");
-        $sql = "DELETE FROM notes WHERE id = :id";
-        $stmt = $pdo->prepare($sql);
+        $sql = "DELETE FROM $table WHERE id = :id";
+        $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(":id", $id);
         $stmt->execute();
     }

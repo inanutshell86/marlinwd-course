@@ -9,6 +9,6 @@ $data = [
     "content" => $_POST['content']
 ];
 
-$db->updateNote($data);
+$db->update("notes", $data);
 
 header("Location: /"); exit;
