@@ -1,11 +1,14 @@
 <?php
+
+namespace App;
+
 class QueryBuilder
 {
     public $pdo;
 
     function __construct()
     {
-        $this->pdo = new PDO("mysql:host=localhost; dbname=marlin", "root", "");
+        $this->pdo = new \PDO("mysql:host=localhost; dbname=marlin", "root", "");
     }
 
     function getAll($table)
@@ -13,7 +16,7 @@ class QueryBuilder
         $sql = "SELECT * FROM $table";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute();
-        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
         return $result;
     }
 
@@ -23,7 +26,7 @@ class QueryBuilder
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(":id", $id);
         $stmt->execute();
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $result = $stmt->fetch(\PDO::FETCH_ASSOC);
         return $result;
     }
 

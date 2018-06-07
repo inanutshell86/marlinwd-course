@@ -1,5 +1,37 @@
 <?php
-require 'database/QueryBuilder.php';
+require 'vendor/autoload.php';
+
+use Delight\Auth\Auth;
+use App\QueryBuilder;
+
+//testing delight-im/auth component
+/*$db = new PDO("mysql:host=localhost; dbname=marlin", "root", "");
+$auth = new Auth($db);
+
+$email = "jonhdow@yahoo.com";
+$password = "123456";
+
+
+try {
+    $userId = $auth->register($email, $password, null, function ($selector, $token) {
+        // send `$selector` and `$token` to the user (e.g. via email)
+    });
+
+    // we have signed up a new user with the ID `$userId`
+}
+catch (\Delight\Auth\InvalidEmailException $e) {
+    echo "invalid email address";
+}
+catch (\Delight\Auth\InvalidPasswordException $e) {
+    echo "invalid password";
+}
+catch (\Delight\Auth\UserAlreadyExistsException $e) {
+    echo "user already exists";
+}
+catch (\Delight\Auth\TooManyRequestsException $e) {
+    echo "too many requests";
+}
+var_dump($auth);die;*/
 
 $db = new QueryBuilder();
 $notes = $db->getAll("notes");

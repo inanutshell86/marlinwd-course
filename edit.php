@@ -1,5 +1,7 @@
 <?php
-require 'database/QueryBuilder.php';
+require 'vendor/autoload.php';
+
+use App\QueryBuilder;
 
 $db = new QueryBuilder();
 $note = $db->getById("notes", $_GET['id']);

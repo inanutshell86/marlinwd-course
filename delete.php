@@ -1,8 +1,10 @@
 <?php
-require 'database/QueryBuilder.php';
+require 'vendor/autoload.php';
+
+use App\QueryBuilder;
 
 $db = new QueryBuilder();
 
-$db->deleteNote($_GET['id']);
+$db->deleteById("notes", $_GET['id']);
 
 header("Location: /");

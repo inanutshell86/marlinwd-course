@@ -1,5 +1,7 @@
 <?php
 
+namespace App;
+
 class Auth
 {
     public $db;
