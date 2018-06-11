@@ -1,7 +1,6 @@
 <?php
 namespace App;
 
-use Aura\SqlQuery\QueryFactory;
 use League\Plates\Engine;
 use PDO;
 
@@ -11,22 +10,15 @@ class HomeController
     private $queryFactory;
     private $pdo;
 
-    public function __construct(Engine $view, QueryFactory $queryFactory, PDO $pdo)
+    public function __construct(Engine $view, Database $db)
     {
         $this->view = $view;
-        $this->queryFactory = $queryFactory;
-        $this->pdo = $pdo;
+        $this->db = $db;
     }
 
     public function index()
     {
-        $select = $this->queryFactory->newSelect();
-        $select->cols(["*"])
-            ->from('notes');
-
-        $sth = $this->pdo->prepare($select->getStatement());
-        $sth->execute($select->getBindValues());
-        $notes = $sth->fetchAll(PDO::FETCH_ASSOC);
+        $notes = $this->db->all('notes');
 
         echo $this->view->render('notes', ['notes' => $notes]);
     }
@@ -34,30 +26,14 @@ class HomeController
 
     public function show($id)
     {
-        $select = $this->queryFactory->newSelect();
-        $select->cols(["*"])
-            ->from('notes')
-            ->where('id=:id')
-            ->bindValues(['id' => $id]);
-
-        $sth = $this->pdo->prepare($select->getStatement());
-        $sth->execute($select->getBindValues());
-        $note = $sth->fetch(PDO::FETCH_ASSOC);
+        $note = $this->db->getItem('notes', $id);
 
         echo $this->view->render('show', ['note' => $note]);
     }
 
     public function edit($id)
     {
-        $select = $this->queryFactory->newSelect();
-        $select->cols(["*"])
-            ->from('notes')
-            ->where('id=:id')
-            ->bindValues(['id' => $id]);
-
-        $sth = $this->pdo->prepare($select->getStatement());
-        $sth->execute($select->getBindValues());
-        $note = $sth->fetch(PDO::FETCH_ASSOC);
+        $note = $this->db->editItem('notes', $id);
 
         echo $this->view->render('edit', ['note' => $note]);
     }
@@ -69,47 +45,21 @@ class HomeController
 
     public function store()
     {
-        $insert = $this->queryFactory->newInsert();
-
-        $insert->into('notes')
-            ->cols([
-                'title' => $_POST['title'],
-                'content' => $_POST['content']
-            ]);
-
-        $sth = $this->pdo->prepare($insert->getStatement());
-        $sth->execute($insert->getBindValues());
+        $this->db->storeItem('notes', $_POST);
 
         header("Location: /notes");
     }
 
     public function update($id)
     {
-        $update = $this->queryFactory->newUpdate();
-
-        $update->table('notes')
-            ->cols([
-                'id' => $id,
-                'title' => $_POST['title'],
-                'content' => $_POST['content']
-            ])
-            ->where('id = :id');
-        $sth = $this->pdo->prepare($update->getStatement());
-        $sth->execute($update->getBindValues());
+        $this->db->updateItem('notes', $id, $_POST);
 
         header("Location: /notes");
     }
 
     public function delete($id)
     {
-        $delete = $this->queryFactory->newDelete();
-
-        $delete
-            ->from('notes')
-            ->where('id = :id')
-            ->bindValue('id', $id);
-        $sth = $this->pdo->prepare($delete->getStatement());
-        $sth->execute($delete->getBindValues());
+        $this->db->deleteItem('notes', $id);
 
         header("Location: /notes");
     }
